@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "./theme";
 export function Wordmark() {
   return (
     <a className="wordmark" href="/">
@@ -52,6 +53,7 @@ export function Navigation({ active = "" }: { active?: string }) {
             The lab <span className="tiny-orange">↗</span>
           </a>
         </nav>
+        <ThemeToggle />
         <a className="black-button nav-cta" href="/workspace">
           Explore live demo <ArrowUpRight size={14} />
         </a>

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Playground from "./playground";
+import { ThemeToggle } from "./theme";
 import type { Execution, Experiment } from "../lib/api";
 import { Wordmark } from "./chrome";
 import verification from "../lib/verification.json";
@@ -561,6 +562,7 @@ export default function Home() {
             <strong>{view}</strong>
           </span>
           <div>
+            <ThemeToggle />
             <span className="top-label">LLM ENGINEERING</span>
             <span className="avatar">SA</span>
           </div>
