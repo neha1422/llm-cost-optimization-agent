@@ -1,0 +1,824 @@
+{
+  "generated_at": "2026-11-15T12:22:32.163469+00:00",
+  "engine": "Provided local LLM simulator",
+  "cost_method": "Fresh session per ticket; no claimed cache discount",
+  "rows": [
+    {
+      "mode": "q1",
+      "ticket_id": "T-1001",
+      "target": 3000,
+      "optimized": {
+        "action": "REFUND",
+        "kb_article": "returns-within-30-days",
+        "correct": true,
+        "points": 1662,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 324,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 324,
+            "output_tokens": 46,
+            "points": 1662
+          }
+        ],
+        "stages": []
+      },
+      "baseline": {
+        "action": "REFUND",
+        "kb_article": "returns-within-30-days",
+        "correct": true,
+        "points": 8895,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 525,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 525,
+            "output_tokens": 488,
+            "points": 8895
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 81.32,
+      "target_met": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1002",
+      "target": 3000,
+      "optimized": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "digital-license-no-refund",
+        "correct": true,
+        "points": 1452,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 289,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 289,
+            "output_tokens": 39,
+            "points": 1452
+          }
+        ],
+        "stages": []
+      },
+      "baseline": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "digital-license-no-refund",
+        "correct": true,
+        "points": 8985,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 520,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 520,
+            "output_tokens": 495,
+            "points": 8985
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 83.84,
+      "target_met": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1003",
+      "target": 3000,
+      "optimized": {
+        "action": "ESCALATE_TIER2",
+        "kb_article": "custom-items-no-replace",
+        "correct": true,
+        "points": 1500,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 305,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 305,
+            "output_tokens": 39,
+            "points": 1500
+          }
+        ],
+        "stages": []
+      },
+      "baseline": {
+        "action": "ESCALATE_TIER2",
+        "kb_article": "custom-items-no-replace",
+        "correct": true,
+        "points": 8724,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 508,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 508,
+            "output_tokens": 480,
+            "points": 8724
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 82.81,
+      "target_met": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1004",
+      "target": 3000,
+      "optimized": {
+        "action": "REPLACE",
+        "kb_article": "damage-replacement-7-days",
+        "correct": true,
+        "points": 1461,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 307,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 307,
+            "output_tokens": 36,
+            "points": 1461
+          }
+        ],
+        "stages": []
+      },
+      "baseline": {
+        "action": "REPLACE",
+        "kb_article": "damage-replacement-7-days",
+        "correct": true,
+        "points": 8880,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 505,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 505,
+            "output_tokens": 491,
+            "points": 8880
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 83.55,
+      "target_met": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1091",
+      "target": 3000,
+      "optimized": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "subscription-cooling-off",
+        "correct": true,
+        "points": 1329,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 253,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 253,
+            "output_tokens": 38,
+            "points": 1329
+          }
+        ],
+        "stages": []
+      },
+      "baseline": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "subscription-cooling-off",
+        "correct": true,
+        "points": 8913,
+        "calls": [
+          {
+            "label": "handle_ticket",
+            "input_tokens": 511,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 511,
+            "output_tokens": 492,
+            "points": 8913
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 85.09,
+      "target_met": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1001",
+      "target": 2500,
+      "optimized": {
+        "action": "REFUND",
+        "kb_article": "returns-within-30-days",
+        "correct": true,
+        "points": 1665,
+        "calls": [
+          {
+            "label": "compose",
+            "input_tokens": 325,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 325,
+            "output_tokens": 46,
+            "points": 1665
+          }
+        ],
+        "stages": [
+          {
+            "name": "triage",
+            "kind": "deterministic",
+            "result": {
+              "product_type": "physical",
+              "thread": "[CUSTOMER] Hi, I'd like a refund for the wireless headphones. They arrived 10 days ago and I never opened the box.\n[AGENT] Thanks for reaching out \u2014 checking your order now."
+            },
+            "input_tokens": 42,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.114
+          },
+          {
+            "name": "retrieve",
+            "kind": "deterministic",
+            "result": {
+              "articles": [
+                "returns-within-30-days",
+                "damage-replacement-7-days",
+                "digital-license-no-refund",
+                "subscription-cooling-off",
+                "custom-items-no-replace"
+              ]
+            },
+            "input_tokens": 159,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.066
+          },
+          {
+            "name": "compose",
+            "kind": "llm",
+            "result": {
+              "completion": "{\n  \"action\": \"REFUND\",\n  \"kb_article\": \"returns-within-30-days\",\n  \"customer_reply\": \"We approved your refund; you'll see it in 3-5 business days.\"\n}"
+            },
+            "input_tokens": 325,
+            "output_tokens": 46,
+            "points": 1665,
+            "duration_ms": 0.238
+          },
+          {
+            "name": "audit",
+            "kind": "deterministic",
+            "result": {
+              "valid": true,
+              "checks": [
+                "JSON schema",
+                "action allowlist",
+                "retrieved citation",
+                "policy/action compatibility"
+              ]
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.01
+          }
+        ]
+      },
+      "baseline": {
+        "action": "REFUND",
+        "kb_article": "returns-within-30-days",
+        "correct": true,
+        "points": 73350,
+        "calls": [
+          {
+            "label": "triage",
+            "input_tokens": 8457,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 8457,
+            "output_tokens": 482,
+            "points": 32601
+          },
+          {
+            "label": "retrieve",
+            "input_tokens": 590,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 590,
+            "output_tokens": 46,
+            "points": 2460
+          },
+          {
+            "label": "compose",
+            "input_tokens": 1181,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1181,
+            "output_tokens": 487,
+            "points": 10848
+          },
+          {
+            "label": "audit",
+            "input_tokens": 6712,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 6712,
+            "output_tokens": 487,
+            "points": 27441
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 97.73,
+      "target_met": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1002",
+      "target": 2500,
+      "optimized": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "digital-license-no-refund",
+        "correct": true,
+        "points": 1455,
+        "calls": [
+          {
+            "label": "compose",
+            "input_tokens": 290,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 290,
+            "output_tokens": 39,
+            "points": 1455
+          }
+        ],
+        "stages": [
+          {
+            "name": "triage",
+            "kind": "deterministic",
+            "result": {
+              "product_type": "digital",
+              "thread": "[CUSTOMER] I bought the ebook bundle 5 days ago. You already showed me the license key on the download page. Can I get a refund anyway?"
+            },
+            "input_tokens": 33,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 3.172
+          },
+          {
+            "name": "retrieve",
+            "kind": "deterministic",
+            "result": {
+              "articles": [
+                "digital-license-no-refund",
+                "subscription-cooling-off",
+                "damage-replacement-7-days",
+                "returns-within-30-days"
+              ]
+            },
+            "input_tokens": 130,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.245
+          },
+          {
+            "name": "compose",
+            "kind": "llm",
+            "result": {
+              "completion": "{\n  \"action\": \"SEND_ARTICLE\",\n  \"kb_article\": \"digital-license-no-refund\",\n  \"customer_reply\": \"Here's the policy that applies to your request.\"\n}"
+            },
+            "input_tokens": 290,
+            "output_tokens": 39,
+            "points": 1455,
+            "duration_ms": 0.549
+          },
+          {
+            "name": "audit",
+            "kind": "deterministic",
+            "result": {
+              "valid": true,
+              "checks": [
+                "JSON schema",
+                "action allowlist",
+                "retrieved citation",
+                "policy/action compatibility"
+              ]
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.032
+          }
+        ]
+      },
+      "baseline": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "digital-license-no-refund",
+        "correct": true,
+        "points": 73332,
+        "calls": [
+          {
+            "label": "triage",
+            "input_tokens": 8451,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 8451,
+            "output_tokens": 495,
+            "points": 32778
+          },
+          {
+            "label": "retrieve",
+            "input_tokens": 606,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 606,
+            "output_tokens": 39,
+            "points": 2403
+          },
+          {
+            "label": "compose",
+            "input_tokens": 1194,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1194,
+            "output_tokens": 483,
+            "points": 10827
+          },
+          {
+            "label": "audit",
+            "input_tokens": 6708,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 6708,
+            "output_tokens": 480,
+            "points": 27324
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 98.02,
+      "target_met": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1003",
+      "target": 2500,
+      "optimized": {
+        "action": "ESCALATE_TIER2",
+        "kb_article": "custom-items-no-replace",
+        "correct": true,
+        "points": 1503,
+        "calls": [
+          {
+            "label": "compose",
+            "input_tokens": 306,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 306,
+            "output_tokens": 39,
+            "points": 1503
+          }
+        ],
+        "stages": [
+          {
+            "name": "triage",
+            "kind": "deterministic",
+            "result": {
+              "product_type": "custom",
+              "thread": "[CUSTOMER] The personalized mug I ordered arrived cracked on day 2. Please send a replacement."
+            },
+            "input_tokens": 21,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 1.866
+          },
+          {
+            "name": "retrieve",
+            "kind": "deterministic",
+            "result": {
+              "articles": [
+                "custom-items-no-replace",
+                "damage-replacement-7-days",
+                "digital-license-no-refund",
+                "subscription-cooling-off",
+                "returns-within-30-days"
+              ]
+            },
+            "input_tokens": 159,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.18
+          },
+          {
+            "name": "compose",
+            "kind": "llm",
+            "result": {
+              "completion": "{\n  \"action\": \"ESCALATE_TIER2\",\n  \"kb_article\": \"custom-items-no-replace\",\n  \"customer_reply\": \"A specialist will follow up shortly.\"\n}"
+            },
+            "input_tokens": 306,
+            "output_tokens": 39,
+            "points": 1503,
+            "duration_ms": 0.591
+          },
+          {
+            "name": "audit",
+            "kind": "deterministic",
+            "result": {
+              "valid": true,
+              "checks": [
+                "JSON schema",
+                "action allowlist",
+                "retrieved citation",
+                "policy/action compatibility"
+              ]
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.041
+          }
+        ]
+      },
+      "baseline": {
+        "action": "ESCALATE_TIER2",
+        "kb_article": "custom-items-no-replace",
+        "correct": true,
+        "points": 73503,
+        "calls": [
+          {
+            "label": "triage",
+            "input_tokens": 8435,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 8435,
+            "output_tokens": 494,
+            "points": 32715
+          },
+          {
+            "label": "retrieve",
+            "input_tokens": 604,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 604,
+            "output_tokens": 39,
+            "points": 2397
+          },
+          {
+            "label": "compose",
+            "input_tokens": 1179,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1179,
+            "output_tokens": 492,
+            "points": 10917
+          },
+          {
+            "label": "audit",
+            "input_tokens": 6703,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 6703,
+            "output_tokens": 491,
+            "points": 27474
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 97.96,
+      "target_met": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1004",
+      "target": 2500,
+      "optimized": {
+        "action": "REPLACE",
+        "kb_article": "damage-replacement-7-days",
+        "correct": true,
+        "points": 1464,
+        "calls": [
+          {
+            "label": "compose",
+            "input_tokens": 308,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 308,
+            "output_tokens": 36,
+            "points": 1464
+          }
+        ],
+        "stages": [
+          {
+            "name": "triage",
+            "kind": "deterministic",
+            "result": {
+              "product_type": "physical",
+              "thread": "[CUSTOMER] Warehouse mug (not custom) showed up cracked. Delivered 2 days ago. Replacement?"
+            },
+            "input_tokens": 23,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 1.843
+          },
+          {
+            "name": "retrieve",
+            "kind": "deterministic",
+            "result": {
+              "articles": [
+                "damage-replacement-7-days",
+                "custom-items-no-replace",
+                "returns-within-30-days",
+                "digital-license-no-refund",
+                "subscription-cooling-off"
+              ]
+            },
+            "input_tokens": 159,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.287
+          },
+          {
+            "name": "compose",
+            "kind": "llm",
+            "result": {
+              "completion": "{\n  \"action\": \"REPLACE\",\n  \"kb_article\": \"damage-replacement-7-days\",\n  \"customer_reply\": \"A replacement is on the way.\"\n}"
+            },
+            "input_tokens": 308,
+            "output_tokens": 36,
+            "points": 1464,
+            "duration_ms": 0.734
+          },
+          {
+            "name": "audit",
+            "kind": "deterministic",
+            "result": {
+              "valid": true,
+              "checks": [
+                "JSON schema",
+                "action allowlist",
+                "retrieved citation",
+                "policy/action compatibility"
+              ]
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.04
+          }
+        ]
+      },
+      "baseline": {
+        "action": "REPLACE",
+        "kb_article": "damage-replacement-7-days",
+        "correct": true,
+        "points": 73305,
+        "calls": [
+          {
+            "label": "triage",
+            "input_tokens": 8442,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 8442,
+            "output_tokens": 494,
+            "points": 32736
+          },
+          {
+            "label": "retrieve",
+            "input_tokens": 604,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 604,
+            "output_tokens": 36,
+            "points": 2352
+          },
+          {
+            "label": "compose",
+            "input_tokens": 1178,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1178,
+            "output_tokens": 481,
+            "points": 10749
+          },
+          {
+            "label": "audit",
+            "input_tokens": 6691,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 6691,
+            "output_tokens": 493,
+            "points": 27468
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 98.0,
+      "target_met": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1091",
+      "target": 2500,
+      "optimized": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "subscription-cooling-off",
+        "correct": true,
+        "points": 1332,
+        "calls": [
+          {
+            "label": "compose",
+            "input_tokens": 254,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 254,
+            "output_tokens": 38,
+            "points": 1332
+          }
+        ],
+        "stages": [
+          {
+            "name": "triage",
+            "kind": "deterministic",
+            "result": {
+              "product_type": "subscription",
+              "thread": "[CUSTOMER] I cancelled my annual Pro plan on day 38. Please refund the unused months."
+            },
+            "input_tokens": 21,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 2.293
+          },
+          {
+            "name": "retrieve",
+            "kind": "deterministic",
+            "result": {
+              "articles": [
+                "subscription-cooling-off",
+                "digital-license-no-refund",
+                "returns-within-30-days"
+              ]
+            },
+            "input_tokens": 101,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.524
+          },
+          {
+            "name": "compose",
+            "kind": "llm",
+            "result": {
+              "completion": "{\n  \"action\": \"SEND_ARTICLE\",\n  \"kb_article\": \"subscription-cooling-off\",\n  \"customer_reply\": \"Here's the policy that applies to your request.\"\n}"
+            },
+            "input_tokens": 254,
+            "output_tokens": 38,
+            "points": 1332,
+            "duration_ms": 9.029
+          },
+          {
+            "name": "audit",
+            "kind": "deterministic",
+            "result": {
+              "valid": true,
+              "checks": [
+                "JSON schema",
+                "action allowlist",
+                "retrieved citation",
+                "policy/action compatibility"
+              ]
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "points": 0,
+            "duration_ms": 0.045
+          }
+        ]
+      },
+      "baseline": {
+        "action": "SEND_ARTICLE",
+        "kb_article": "subscription-cooling-off",
+        "correct": true,
+        "points": 73686,
+        "calls": [
+          {
+            "label": "triage",
+            "input_tokens": 8448,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 8448,
+            "output_tokens": 494,
+            "points": 32754
+          },
+          {
+            "label": "retrieve",
+            "input_tokens": 613,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 613,
+            "output_tokens": 38,
+            "points": 2409
+          },
+          {
+            "label": "compose",
+            "input_tokens": 1187,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 1187,
+            "output_tokens": 495,
+            "points": 10986
+          },
+          {
+            "label": "audit",
+            "input_tokens": 6714,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 6714,
+            "output_tokens": 493,
+            "points": 27537
+          }
+        ],
+        "stages": []
+      },
+      "savings_percent": 98.19,
+      "target_met": true
+    }
+  ]
+}

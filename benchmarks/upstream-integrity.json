@@ -1,0 +1,38 @@
+{
+  "shared/llm.py": {
+    "sha256": "34731d6043d4d932abf037c33673029b4e77619b2c5b59dad31c70ca6870544e",
+    "unchanged": true
+  },
+  "shared/billing.py": {
+    "sha256": "bc9b1825af09130ab77573a947df4484906bd18f6f5d3949be11c591f714e13d",
+    "unchanged": true
+  },
+  "shared/kb.py": {
+    "sha256": "e269df4f385c2635df347a6833708099f6c25a2ca74914d075e4fec62eecfae2",
+    "unchanged": true
+  },
+  "shared/tools.py": {
+    "sha256": "3fc0f7c148d8a61e465b82331be5310f2d7f16ce7ce17d399b1d887cccdca2cb",
+    "unchanged": true
+  },
+  "shared/tokens.py": {
+    "sha256": "6936c94b8d3fecc9d3d1b4660d2deac65d25476e5430abeb85333be8c76d9566",
+    "unchanged": true
+  },
+  "eval/reference.py": {
+    "sha256": "285a04d5593caff36c50c92a0d37f3883e6b1fafeae473d3563fee61dd8254b0",
+    "unchanged": true
+  },
+  "tests/test_question1.py": {
+    "sha256": "8c094bd5636f89d85f8ff0411aef047f1a15e5704740a619810b1493a0a5dbbe",
+    "unchanged": true
+  },
+  "tests/test_question2.py": {
+    "sha256": "d0d8bc70ff1cc78bd2745a02db0ff742a303f38f49bce24508ad3d0d6303cd71",
+    "unchanged": true
+  },
+  "tests/conftest.py": {
+    "sha256": "d0a5179e44e0206108b1fd09e2ecc8c792aae09903c85a3cd4cbf4aaf2335bd9",
+    "unchanged": true
+  }
+}

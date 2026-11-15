@@ -1,0 +1,113 @@
+{
+  "url": "https://shopassist-cost-lab.vercel.app",
+  "verified_at_unix": 1794746739.6684449,
+  "checks": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/tickets",
+      "status": 200
+    },
+    {
+      "path": "/api/kb/articles",
+      "status": 200
+    },
+    {
+      "path": "/api/benchmarks/results",
+      "status": 200
+    },
+    {
+      "path": "/api/docs",
+      "status": 200
+    },
+    {
+      "path": "/api/agent/q1/run",
+      "ticket_id": "T-1001",
+      "status": 200,
+      "points": 1662,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q1/run",
+      "ticket_id": "T-1002",
+      "status": 200,
+      "points": 1452,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q1/run",
+      "ticket_id": "T-1003",
+      "status": 200,
+      "points": 1500,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q1/run",
+      "ticket_id": "T-1004",
+      "status": 200,
+      "points": 1461,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q1/run",
+      "ticket_id": "T-1091",
+      "status": 200,
+      "points": 1329,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q2/run",
+      "ticket_id": "T-1001",
+      "status": 200,
+      "points": 1665,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q2/run",
+      "ticket_id": "T-1002",
+      "status": 200,
+      "points": 1455,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q2/run",
+      "ticket_id": "T-1003",
+      "status": 200,
+      "points": 1503,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q2/run",
+      "ticket_id": "T-1004",
+      "status": 200,
+      "points": 1464,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/agent/q2/run",
+      "ticket_id": "T-1091",
+      "status": 200,
+      "points": 1332,
+      "matches_recorded": true
+    },
+    {
+      "path": "/api/benchmarks/run",
+      "status": 200,
+      "correct": 10
+    },
+    {
+      "path": "/api/tickets/T-9999",
+      "status": 404
+    },
+    {
+      "path": "/api/kb/articles/missing",
+      "status": 404
+    }
+  ]
+}
