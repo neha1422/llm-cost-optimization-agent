@@ -169,6 +169,3 @@ Executed browser/API checks and test details: [docs/VERIFICATION.md](docs/VERIFI
 
 [Mobile screenshot](docs/screenshots/redesign-home-mobile.jpg) · [Implementation and verification notes](docs/REDESIGN.md)
 
-### Original dashboard (before redesign)
-
-![Responsive mobile overview](docs/screenshots/mobile.jpg)
