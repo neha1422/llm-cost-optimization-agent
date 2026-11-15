@@ -512,7 +512,7 @@ export default function Home() {
         </div>
         <div className="nav-caption">ENGINEERING WORKSPACE</div>
         <div className="new-workspace-links">
-          <a href="/compare">
+          <a href="/compare?details=1">
             <Code2 size={17} />
             Before vs after
             <ArrowRight size={13} />
@@ -558,7 +558,7 @@ export default function Home() {
       <main>
         <header className="topbar">
           <span>
-            <a href="/">ShopAssist AI</a> <ChevronRight size={14} />
+            <a href="/">← Back to the guided demo</a> <ChevronRight size={14} />
             <strong>{view}</strong>
           </span>
           <div>

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "./theme";
+import { EngineeringMenu } from "./tools-menu";
 export function Wordmark() {
   return (
     <a className="wordmark" href="/">
@@ -39,23 +40,19 @@ export function Navigation({ active = "" }: { active?: string }) {
           className={`site-links ${open ? "is-open" : ""}`}
           aria-label="Product navigation"
         >
-          <a href="/" aria-current={active === "home" ? "page" : undefined}>
-            Overview
-          </a>
-          <a href="/workspace">Workspace</a>
+          <a href="/">Try the assistant</a>
           <a
             href="/compare"
             aria-current={active === "compare" ? "page" : undefined}
           >
-            Inside the optimization
+            Compare costs
           </a>
-          <a href="/lab" aria-current={active === "lab" ? "page" : undefined}>
-            The lab <span className="tiny-orange">↗</span>
-          </a>
+          <a href="/?tab=learn">How it works</a>
+          <EngineeringMenu />
         </nav>
         <ThemeToggle />
         <a className="black-button nav-cta" href="/workspace">
-          Explore live demo <ArrowUpRight size={14} />
+          Back to the demo <ArrowUpRight size={14} />
         </a>
       </div>
     </header>

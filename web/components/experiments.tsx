@@ -382,7 +382,7 @@ export default function Experiments({ lab = false }: { lab?: boolean }) {
           </h1>
           <p>
             {lab
-              ? "Explore the engineering decisions behind every saved token."
+              ? "Optional tools for technical reviewers. For a simpler walkthrough, use “Try the assistant” above."
               : "Same customer. Same policy. Two different execution strategies."}
           </p>
         </div>

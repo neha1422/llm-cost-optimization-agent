@@ -1,4 +1,4 @@
-import Experiments from "../../components/experiments";
+import WorkspaceEntry from "../../components/workspace-entry";
 export default function Page() {
-  return <Experiments />;
+  return <WorkspaceEntry comparison />;
 }
