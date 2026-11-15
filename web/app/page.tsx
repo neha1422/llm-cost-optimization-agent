@@ -1,81 +1,640 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { Activity, ArrowDownRight, ArrowRight, BookOpen, Check, CheckCircle2, ChevronRight, CircleDollarSign, Code2, FlaskConical, Layers3, LayoutDashboard, LoaderCircle, Play, Search, ShieldCheck, Sparkles, Terminal, Ticket, Workflow, Zap } from 'lucide-react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-
-type Call={label:string;input_tokens:number;cached_input_tokens:number;output_tokens:number;points:number};
-type Stage={name:string;kind:string;result:Record<string,unknown>;input_tokens:number;output_tokens:number;points:number;duration_ms:number};
-type Measurement={action:string;kb_article:string;correct:boolean;points:number;calls:Call[];stages:Stage[]};
-type Row={mode:string;ticket_id:string;target:number;target_met:boolean;baseline:Measurement;optimized:Measurement;savings_percent:number};
-type Report={generated_at:string;engine:string;cost_method:string;execution?:string;rows:Row[]};
-type TicketData={ticket:{ticket_id:string;messages:{from:string;text:string}[]};order:Record<string,unknown>};
-type Resolution={ticket_id:string;mode:string;action:string;kb_article:string;customer_reply:string;points:number;calls:Call[];stages:Stage[];duration_ms:number};
-type Article={id:string;content:string};
-const API=process.env.NEXT_PUBLIC_API_URL || '/api';
-async function request<T>(path:string,body?:unknown):Promise<T>{
- const response=await fetch(API+path,{method:body===undefined?'GET':'POST',headers:body===undefined?undefined:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
- if(!response.ok) throw new Error(`API request failed (${response.status}). Please retry.`);
- return response.json();
-}
-const navigation=[{name:'Overview',icon:LayoutDashboard},{name:'Ticket playground',icon:Ticket},{name:'Pipeline',icon:Workflow},{name:'Cost analytics',icon:Activity},{name:'Knowledge base',icon:BookOpen},{name:'Benchmarks',icon:FlaskConical},{name:'Architecture',icon:Layers3}];
-const num=(n:number)=>new Intl.NumberFormat('en-US').format(n);
-const label=(s:string)=>s.replaceAll('-',' ').replaceAll('_',' ');
-function Badge({children}:{children:React.ReactNode}){return <span className="badge"><span/>{children}</span>}
-function Empty({children}:{children:React.ReactNode}){return <div className="empty"><Terminal size={28}/><p>{children}</p></div>}
-function Chart({rows}:{rows:Row[]}){
- const data=rows.map(r=>({name:`${r.mode.toUpperCase()} · ${r.ticket_id.slice(2)}`,Baseline:r.baseline.points,Optimized:r.optimized.points}));
- return <div className="chart" role="img" aria-label="Measured baseline and optimized points per ticket"><ResponsiveContainer width="100%" height="100%"><BarChart data={data} barGap={3}><CartesianGrid strokeDasharray="3 5" stroke="#263044" vertical={false}/><XAxis dataKey="name" tick={{fill:'#8b99b2',fontSize:11}} axisLine={false} tickLine={false}/><YAxis tick={{fill:'#8b99b2',fontSize:11}} axisLine={false} tickLine={false} tickFormatter={v=>v>=1000?`${v/1000}k`:v}/><Tooltip contentStyle={{background:'#172131',border:'1px solid #344156',borderRadius:10,color:'#edf4ff'}} cursor={{fill:'#ffffff05'}}/><Legend/><Bar dataKey="Baseline" fill="#48536e" radius={[4,4,0,0]}/><Bar dataKey="Optimized" fill="#9a83ff" radius={[4,4,0,0]}/></BarChart></ResponsiveContainer></div>
-}
-function Metrics({report}:{report:Report}){
- const base=report.rows.reduce((s,r)=>s+r.baseline.points,0),opt=report.rows.reduce((s,r)=>s+r.optimized.points,0);
- const correct=report.rows.filter(r=>r.optimized.correct).length;
- return <div className="metrics">{[
- {title:'Cost reduction',value:`${((1-opt/base)*100).toFixed(1)}%`,detail:'Against the measured baseline',icon:ArrowDownRight,color:'purple'},
- {title:'Optimized billing',value:num(opt),detail:`${num(base)} baseline points`,icon:CircleDollarSign,color:'cyan'},
- {title:'Evaluated correctness',value:`${correct}/${report.rows.length}`,detail:'Action + policy reference match',icon:ShieldCheck,color:'green'},
- {title:'Tickets evaluated',value:String(report.rows.length/2).padStart(2,'0'),detail:'Across both optimization tracks',icon:Ticket,color:'blue'}
- ].map(m=><div className={`metric ${m.color}`} key={m.title}><div className="metric-top">{m.title}<m.icon size={18}/></div><strong>{m.value}</strong><small>{m.detail}</small></div>)}</div>
-}
-function Pipeline({stages}:{stages?:Stage[]}){
- const [active,setActive]=useState(0);
- const descriptions=['Read customer context and order facts. No LLM needed.','Find relevant source policies with fact-aware lexical search.','One concise model call produces structured resolution JSON.','Check schema, citation, valid action and policy compatibility.'];
- const names=['triage','retrieve','compose','audit'];
- return <><div className="pipeline">{names.map((name,i)=>{const s=stages?.find(s=>s.name===name);return <button key={name} className={`stage ${active===i?'selected':''}`} onClick={()=>setActive(i)}><span className="stage-no">0{i+1}</span><div className="stage-symbol">{i===2?<Sparkles size={23}/>:i===3?<ShieldCheck size={23}/>:i===1?<Search size={23}/>:<Workflow size={23}/>}</div><strong>{label(name)}</strong><small>{i===2?'1 LLM call':'Deterministic'}</small><span className={`stage-cost ${i===2?'billable':''}`}>{s?`${num(s.points)} pts`:i===2?'Measured on execution':'0 pts'}</span>{i<3?<ChevronRight className="stage-arrow" size={17}/>:null}</button>})}</div><div className="stage-detail"><span className="mono">0{active+1} / {names[active].toUpperCase()}</span><p>{descriptions[active]}</p>{stages?.[active]?<pre>{JSON.stringify(stages[active],null,2)}</pre>:null}</div></>
-}
-export default function Home(){
- const [view,setView]=useState('Overview');
- const [report,setReport]=useState<Report|null>(null);
- const [tickets,setTickets]=useState<{ticket_id:string;title:string}[]>([]);
- const [articles,setArticles]=useState<Article[]>([]);
- const [selected,setSelected]=useState('T-1001');
- const [ticket,setTicket]=useState<TicketData|null>(null);
- const [mode,setMode]=useState('q2');
- const [result,setResult]=useState<Resolution|null>(null);
- const [loading,setLoading]=useState(false);
- const [benchLoading,setBenchLoading]=useState(false);
- const [error,setError]=useState('');
- const [search,setSearch]=useState('');
- const [filter,setFilter]=useState('all');
- const [article,setArticle]=useState<Article|null>(null);
- useEffect(()=>{let alive=true;Promise.all([request<Report>('/benchmarks/results'),request<typeof tickets>('/tickets'),request<Article[]>('/kb/articles')]).then(([r,t,a])=>{if(alive){setReport(r);setTickets(t);setArticles(a)}}).catch(e=>{if(alive)setError(e.message)});return()=>{alive=false}},[]);
- useEffect(()=>{let alive=true;setTicket(null);setResult(null);request<TicketData>(`/tickets/${selected}`).then(t=>{if(alive)setTicket(t)}).catch(e=>{if(alive)setError(e.message)});return()=>{alive=false}},[selected]);
- async function run(){setLoading(true);setError('');setResult(null);try{setResult(await request<Resolution>(`/agent/${mode}/run`,{ticket_id:selected}))}catch(e){setError(e instanceof Error?e.message:'Execution failed')}finally{setLoading(false)}}
- async function benchmark(){setBenchLoading(true);setError('');try{setReport(await request<Report>('/benchmarks/run',{}))}catch(e){setError(e instanceof Error?e.message:'Benchmark failed')}finally{setBenchLoading(false)}}
- const rows=report?.rows||[];
- const chartRows=rows.filter(r=>filter==='all'||r.mode===filter);
- const input=rows.reduce((sum,r)=>sum+r.optimized.calls.reduce((s,c)=>s+c.input_tokens,0),0);
- const output=rows.reduce((sum,r)=>sum+r.optimized.calls.reduce((s,c)=>s+c.output_tokens,0),0);
- const filteredArticles=articles.filter(a=>(a.id+' '+a.content).toLowerCase().includes(search.toLowerCase())&&(filter==='all'||a.id.includes(filter)));
- const pageTitles:Record<string,[string,string]>={Overview:['Less spend. Same intelligence.','A clear view of every token, decision, and optimization.'],'Ticket playground':['Put the agents to work.','Run real Python agents on the assignment’s sample support tickets.'],Pipeline:['Four stages. One model call.','Explore how each responsibility contributes to an efficient resolution.'],'Cost analytics':['Every token accounted for.','Measured billing points, compared across tickets and agent architectures.'],'Knowledge base':['Policy is the source of truth.','Explore the actual help-center articles used by the agents.'],Benchmarks:['Proof, not promises.','Reproduce optimized results and compare with recorded baseline measurements.'],Architecture:['Built for clarity. Optimized for cost.','A transparent look at the original and optimized execution paths.']};
- function navigate(name:string){setView(name);setFilter('all');setError('')}
- return <div className="shell"><aside className="sidebar"><a className="brand" href="#" onClick={e=>{e.preventDefault();navigate('Overview')}}><span className="brand-mark"><Layers3 size={24}/></span><span>ShopAssist<span className="brand-ai"> AI</span><small>COST OPTIMIZATION LAB</small></span></a><div className="workspace"><span className="workspace-icon">S</span><div>Engineering workspace<small>Internship assignment</small></div><ChevronRight size={14}/></div><div className="nav-caption">WORKSPACE</div><nav aria-label="Main navigation">{navigation.map(n=><button key={n.name} className={view===n.name?'active':''} onClick={()=>navigate(n.name)}><n.icon size={18}/><span>{n.name}</span>{view===n.name?<span className="nav-dot"/>:null}</button>)}</nav><div className="sidebar-bottom"><div className="simulator"><span className="status-dot"/><strong>Local LLM simulator</strong><p>Provided assignment engine.<br/>No external API calls or keys.</p><span className="mono">PYTHON ENGINE / V1.0</span></div><a href={`${API}/docs`} target="_blank" rel="noreferrer"><Code2 size={16}/>API documentation<ArrowRight size={14}/></a></div></aside><main><header className="topbar"><span>Workspace <ChevronRight size={14}/><strong>{view}</strong></span><div><span className="top-label">LLM ENGINEERING</span><span className="avatar">SA</span></div></header><div className="content"><div className="page-heading"><div><div className="eyebrow"><span/> SHOPASSIST AI / {view.toUpperCase()}</div><h1>{pageTitles[view][0]}</h1><p>{pageTitles[view][1]}</p></div><button className="button primary" onClick={()=>view==='Benchmarks'?benchmark():navigate('Ticket playground')} disabled={benchLoading}>{benchLoading?<LoaderCircle className="spin" size={16}/>:<Play size={15}/>} {view==='Benchmarks'?'Run benchmarks':'Launch playground'}<ArrowRight size={15}/></button></div>{error?<div className="error" role="alert">{error}<button onClick={()=>window.location.reload()}>Reload</button></div>:null}
- {!report&&!error?<Empty>Loading measured benchmark data…</Empty>:null}
- {view==='Overview'&&report?<><Metrics report={report}/><div className="overview-grid"><section className="panel"><div className="panel-heading"><div><h2>Optimization impact</h2><p>Baseline vs optimized · billing points per ticket</p></div><Badge>MEASURED DATA</Badge></div><Chart rows={rows.filter(r=>r.mode==='q2')}/><div className="panel-foot"><span><span className="status-dot"/>All five Q2 samples meet the cost target</span><button className="text-button" onClick={()=>navigate('Cost analytics')}>Explore analytics <ArrowRight size={14}/></button></div></section><section className="panel track-panel"><div className="panel-heading"><div><h2>Two tracks. One goal.</h2><p>Correct decisions, fewer tokens.</p></div><Zap size={19}/></div>{['q1','q2'].map((m,i)=>{const r=rows.filter(r=>r.mode===m);const avg=r.reduce((s,r)=>s+r.optimized.points,0)/r.length;return <button className="track" key={m} onClick={()=>{setMode(m);navigate('Ticket playground')}}><div className="track-title"><span className={`track-icon track-${i}`}>{i===0?<Sparkles size={20}/>:<Workflow size={20}/>}</span><div><strong>{m.toUpperCase()} · {i===0?'Single-call agent':'Optimized pipeline'}</strong><small>{i===0?'A focused prompt, a precise answer.':'Four responsibilities, one model call.'}</small></div><ArrowRight size={16}/></div><div className="track-metrics"><span><strong>{num(avg)}</strong>avg. points / ticket</span><span className="target"><Check size={13}/>≤ {i===0?'3,000':'2,500'} target</span></div></button>})}<div className="callout"><ShieldCheck size={18}/><p>Correctness preserved on every supplied ticket, including the subscription holdout.</p></div></section></div><section className="panel"><div className="panel-heading"><div><h2>A leaner path to resolution</h2><p>Q2 architecture · select a stage to inspect its role</p></div><span className="chip">3 deterministic stages</span></div><Pipeline/></section><div className="bottom-stats"><span><Terminal size={15}/> {num(input)} input tokens · {num(output)} output tokens</span><span>Fresh sessions · no cache discount claimed</span><span>5 sample tickets × 2 tracks</span></div></>:null}
- {view==='Ticket playground'?<div className="playground-grid"><section className="panel"><div className="panel-heading"><div><h2>Customer ticket</h2><p>Choose a real sample from the assignment</p></div><Ticket size={20}/></div><label className="field-label" htmlFor="ticket">SAMPLE TICKET</label><select id="ticket" value={selected} onChange={e=>setSelected(e.target.value)}>{tickets.map(t=><option key={t.ticket_id} value={t.ticket_id}>{t.ticket_id} — {t.title}</option>)}</select>{ticket?<><div className="conversation">{ticket.ticket.messages.map((m,i)=><div className={`message ${m.from}`} key={i}><span>{m.from}</span><p>{m.text}</p></div>)}</div><h3>Order facts</h3><dl className="facts">{Object.entries(ticket.order).map(([k,v])=><div key={k}><dt>{label(k)}</dt><dd>{String(v)}</dd></div>)}</dl></>:<Empty>Loading ticket…</Empty>}</section><section className="panel"><div className="panel-heading"><div><h2>Agent execution</h2><p>Runs the Python implementation through FastAPI</p></div><Sparkles size={20}/></div><div className="segmented">{['q1','q2'].map(m=><button key={m} className={mode===m?'selected':''} onClick={()=>{setMode(m);setResult(null)}}>{m.toUpperCase()} · {m==='q1'?'Single call':'Pipeline'}</button>)}</div><button className="button primary run" onClick={run} disabled={loading||!ticket}>{loading?<LoaderCircle className="spin" size={17}/>:<Play size={16}/>} {loading?'Executing Python agent…':'Run agent'}</button>{result?<div className="resolution" aria-live="polite"><div className="result-header"><Badge>EXECUTION COMPLETE</Badge><span className="mono">{result.duration_ms.toFixed(1)} ms</span></div><span className="field-label">SELECTED ACTION</span><h2 className="action">{label(result.action)}</h2><button className="policy-link" onClick={()=>{setArticle(articles.find(a=>a.id===result.kb_article)||null);navigate('Knowledge base')}}><BookOpen size={15}/>{result.kb_article}<ArrowRight size={14}/></button><blockquote>{result.customer_reply}</blockquote><div className="result-metrics"><div><strong>{num(result.points)}</strong><small>billing points</small></div><div><strong>{result.calls[0].input_tokens}</strong><small>input tokens</small></div><div><strong>{result.calls[0].output_tokens}</strong><small>output tokens</small></div></div><p className="muted">Output from the provided local simulator.</p></div>:<Empty>Your resolution and measured cost will appear here.</Empty>}</section>{result?.stages.length?<section className="panel full"><div className="panel-heading"><div><h2>Execution trace</h2><p>Measured stages for this run</p></div></div><Pipeline stages={result.stages}/></section>:null}</div>:null}
- {view==='Pipeline'?<section className="panel"><div className="panel-heading"><div><h2>Optimized Q2 pipeline</h2><p>{result?.stages.length?`Last executed: ${result.ticket_id}`:'Run a Q2 ticket to populate a live trace.'}</p></div><button className="button" onClick={()=>{setMode('q2');navigate('Ticket playground')}}>Run a ticket <ArrowRight size={14}/></button></div><Pipeline stages={result?.stages.length?result.stages:undefined}/><div className="callout"><ShieldCheck size={20}/><p>Deterministic stages have zero LLM billing points. Their token counts describe text processed, not billed model input. Audit checks structure and policy/action compatibility; it is not an independent guarantee of semantic correctness.</p></div></section>:null}
- {view==='Cost analytics'&&report?<><Metrics report={report}/><section className="panel"><div className="panel-heading"><div><h2>Cost by ticket and track</h2><p>Cold-session measurements · exact repository billing formula</p></div><select aria-label="Filter track" value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">Both tracks</option><option value="q1">Q1 single call</option><option value="q2">Q2 pipeline</option></select></div><Chart rows={chartRows}/></section><div className="two-col"><section className="panel"><h2>Token consumption</h2><p className="muted">Optimized input vs output tokens</p><div className="token-bars"><div><span>Input <b>{num(input)}</b></span><i style={{width:`${input/(input+output)*100}%`}}/></div><div><span>Output <b>{num(output)}</b></span><i style={{width:`${output/(input+output)*100}%`,background:'#62d4c5'}}/></div></div><p className="muted">Cached input: 0 tokens. Prompts are below the 1,024-token cache threshold.</p></section><section className="panel"><h2>Q2 stage costs</h2><p className="muted">Average across five sample tickets</p>{['triage','retrieve','compose','audit'].map(s=><div className="cost-line" key={s}><span>{label(s)}</span><strong>{num(rows.filter(r=>r.mode==='q2').reduce((a,r)=>a+(r.optimized.stages.find(t=>t.name===s)?.points||0),0)/5)} pts</strong></div>)}</section></div><div className="formula mono">points = uncached input × 3 + cached input × 0.3 + output × 15</div></>:null}
- {view==='Knowledge base'?<><section className="panel"><div className="panel-heading"><div><h2>Help-center policies</h2><p>{articles.length} source articles · real repository content</p></div><BookOpen size={20}/></div><div className="search-row"><div className="search"><Search size={17}/><input aria-label="Search policies" placeholder="Search policies, products, or conditions…" value={search} onChange={e=>setSearch(e.target.value)}/></div><select aria-label="Policy category" value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">All policies</option><option value="returns">Returns</option><option value="damage">Damage</option><option value="digital">Digital</option><option value="custom">Custom</option><option value="subscription">Subscriptions</option></select></div><div className="articles">{filteredArticles.map(a=><button key={a.id} className={`article-card ${article?.id===a.id?'chosen':''}`} onClick={()=>setArticle(a)}><BookOpen size={22}/><h3>{label(a.id)}</h3><p>{a.content.split('\n').filter(Boolean).slice(1).join(' ').replaceAll('**','')}</p><span>Read policy <ArrowRight size={14}/></span></button>)}</div>{!filteredArticles.length?<Empty>No policies match this search.</Empty>:null}</section>{article?<section className="panel article-reader"><span className="eyebrow">SOURCE POLICY</span><h2>{label(article.id)}</h2><div className="policy-text">{article.content.replace(/^# .*\n/,'').replaceAll('**','')}</div><span className="mono muted">data/kb/{article.id}.md</span></section>:null}</>:null}
- {view==='Benchmarks'&&report?<><Metrics report={report}/><section className="panel"><div className="panel-heading"><div><h2>Acceptance results</h2><p>{report.execution||'Baseline and optimized agents measured by the reproducible CLI suite.'}</p></div><Badge>{rows.every(r=>r.target_met&&r.optimized.correct)?'ALL TARGETS MET':'REVIEW REQUIRED'}</Badge></div><div className="table-wrap"><table><thead><tr><th>Ticket</th><th>Track</th><th>Baseline pts</th><th>Optimized pts</th><th>Savings</th><th>Correctness</th><th>Target</th></tr></thead><tbody>{rows.map(r=><tr key={r.mode+r.ticket_id}><td className="mono">{r.ticket_id}</td><td><span className="chip">{r.mode.toUpperCase()}</span></td><td>{num(r.baseline.points)}</td><td className="bright">{num(r.optimized.points)}</td><td className="green-text">{r.savings_percent}%</td><td>{r.optimized.correct?<span className="success"><CheckCircle2 size={14}/>Pass</span>:'Fail'}</td><td>{r.target_met?'Met':'Exceeded'} / {num(r.target)}</td></tr>)}</tbody></table></div><div className="panel-foot"><span>Measured {new Date(report.generated_at).toLocaleString()}</span><button className="text-button" onClick={()=>{const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='shopassist-benchmarks.json';a.click();URL.revokeObjectURL(url)}}>Download JSON <ArrowRight size={14}/></button></div></section><section className="panel"><h2>What the benchmark button runs</h2><p className="muted">All five tickets are executed again through each optimized Python agent. Baseline costs come from the recorded CLI run. Run <code>python -m benchmarks.run</code> locally to regenerate both. This button does not run pytest.</p><div className="formula mono">Input × 3 + cached input × 0.3 + output × 15</div></section></>:null}
- {view==='Architecture'?<><section className="panel"><div className="panel-heading"><div><h2>Q1 · One call, focused context</h2><p>The interface stays the same. The prompt becomes smaller.</p></div><Sparkles size={22}/></div><div className="architecture"><div><span className="field-label">ORIGINAL</span><div className="flow"><span>Ticket + order</span><ArrowRight/><span>All policies + examples + random ID</span><ArrowRight/><span>Verbose LLM response</span></div></div><div><span className="field-label green-text">OPTIMIZED</span><div className="flow optimized"><span>Ticket + compact order</span><ArrowRight/><span>Relevant source policies</span><ArrowRight/><span>One call → validated JSON</span></div></div></div></section><section className="panel"><div className="panel-heading"><div><h2>Q2 · Keep responsibilities, remove waste</h2><p>Python handles deterministic work; the model handles composition.</p></div><Workflow size={22}/></div><div className="flow baseline-flow"><span>LLM triage + huge KB</span><ArrowRight/><span>LLM retrieve</span><ArrowRight/><span>LLM compose</span><ArrowRight/><span>LLM audit + huge KB</span></div><Pipeline/></section><section className="panel"><h2>Engineering boundaries</h2><div className="boundary-grid"><div><Code2/><h3>Python stays Python</h3><p>Next.js dashboard → HTTPS API → FastAPI → original Python agent interfaces.</p></div><div><BookOpen/><h3>Source-backed retrieval</h3><p>Fact-aware lexical candidates retain policy exceptions and the general fallback. No ticket-specific answer mapping.</p></div><div><CircleDollarSign/><h3>Unchanged accounting</h3><p>The supplied simulator, tokenizer, billing system, reference answers, and original tests are preserved.</p></div></div><div className="callout"><Terminal size={20}/><p>This demo uses the provided local simulator. Its decisions are derived from order facts internally; results do not establish hosted-model accuracy. A real model needs separate evaluation, prompt-injection defenses and business-policy validation.</p></div></section></>:null}
- <footer><span>ShopAssist AI <span className="footer-dot">·</span> Intelligent Customer Support. Optimized for Accuracy and Cost.</span><a href="https://github.com/Induseuro-labs/intern-assignment-llm-cost-optimization" target="_blank" rel="noreferrer">Original assignment <ArrowRight size={12}/></a></footer></div></main></div>
+"use client";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  ChevronDown,
+  FileText,
+  Play,
+  ShieldCheck,
+  Sparkles,
+  Workflow,
+  X,
+} from "lucide-react";
+import {
+  ErrorNotice,
+  Eyebrow,
+  Footer,
+  Loading,
+  Navigation,
+  NumberCount,
+  UnderHood,
+} from "../components/chrome";
+import {
+  API,
+  Execution,
+  human,
+  num,
+  Report,
+  request,
+  Ticket,
+} from "../lib/api";
+const stages = [
+  [
+    "01",
+    "Understand",
+    "A customer. A real issue.",
+    "Read the customer thread alongside the relevant order facts. The context starts with evidence, not assumptions.",
+  ],
+  [
+    "02",
+    "Retrieve",
+    "The policy that matters.",
+    "Fact-aware lexical retrieval selects relevant source articles, keeping exceptions and the general returns fallback.",
+  ],
+  [
+    "03",
+    "Decide",
+    "One focused model call.",
+    "A concise prompt produces the action, policy citation, and customer reply. Python validates the structured result.",
+  ],
+  [
+    "04",
+    "Analyze",
+    "Make every saving visible.",
+    "Compare decisions, tokens, calls, and billing points against the original implementation. No estimated savings.",
+  ],
+];
+export default function Home() {
+  const [report, setReport] = useState<Report | null>(null),
+    [ticket, setTicket] = useState<Ticket | null>(null),
+    [result, setResult] = useState<Execution | null>(null),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState(""),
+    [stage, setStage] = useState(0);
+  const storyRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let alive = true;
+    Promise.all([
+      request<Report>("/benchmarks/results"),
+      request<Ticket>("/tickets/T-1004"),
+    ])
+      .then(([r, t]) => {
+        if (alive) {
+          setReport(r);
+          setTicket(t);
+        }
+      })
+      .catch((e) => {
+        if (alive) setError(e.message);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  useEffect(() => {
+    const nodes = storyRef.current?.querySelectorAll("[data-story]");
+    const observer = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((entry) => {
+          if (entry.isIntersecting)
+            setStage(Number((entry.target as HTMLElement).dataset.story));
+        }),
+      { rootMargin: "-25% 0px -40% 0px", threshold: 0.1 },
+    );
+    nodes?.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+  const row = report?.rows.find(
+    (r) => r.mode === "q2" && r.ticket_id === "T-1004",
+  );
+  const retrievedPolicies =
+    (row?.optimized.stages?.find((s) => s.name === "retrieve")?.result
+      .articles as string[] | undefined) || [];
+  const q2 = report?.rows.filter((r) => r.mode === "q2") || [];
+  const base = q2.reduce((s, r) => s + r.baseline.points, 0),
+    opt = q2.reduce((s, r) => s + r.optimized.points, 0);
+  const inputSaved = row
+    ? row.baseline.calls.reduce(
+        (s, c) => s + c.input_tokens + c.output_tokens,
+        0,
+      ) -
+      row.optimized.calls.reduce(
+        (s, c) => s + c.input_tokens + c.output_tokens,
+        0,
+      )
+    : 0;
+  async function run() {
+    setBusy(true);
+    setError("");
+    try {
+      const r = await request<{ executions: Execution[] }>(
+        "/explain/experiments",
+        { ticket_id: "T-1004", configurations: ["q2"] },
+      );
+      setResult(r.executions[0]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not run sample");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="product-site">
+      <Navigation active="home" />
+      <main className="landing-main">
+        <section className="hero">
+          <div className="hero-copy">
+            <Eyebrow>AI-powered customer support / cost optimization</Eyebrow>
+            <h1>
+              Same intelligence.
+              <br />
+              <span>
+                A fraction
+                <br className="desktop-break" /> of the cost.
+              </span>
+            </h1>
+            <p>
+              An explainable AI customer-support system engineered to preserve
+              decision accuracy while dramatically reducing LLM inference costs.
+            </p>
+            <div className="hero-actions">
+              <a className="black-button" href="/workspace">
+                Explore live demo <ArrowUpRight size={17} />
+              </a>
+              <a className="quiet-link" href="/compare">
+                See the optimization <ArrowRight size={17} />
+              </a>
+            </div>
+            <div className="hero-proof">
+              <span className="live-dot" /> Real executions. Measured savings.
+              Fully inspectable.
+            </div>
+          </div>
+          <div className="hero-product">
+            <div className="orbit orbit-one" />
+            <div className="orbit orbit-two" />
+            <div className="product-window">
+              <div className="window-bar">
+                <span className="mini-mark">s</span>
+                <strong>ShopAssist</strong>
+                <span className="window-subtitle">Support intelligence</span>
+                <span className="live-dot" />
+              </div>
+              <div className="conversation-top">
+                <span className="mono">T-1004 / FULFILLMENT</span>
+                <span className="subtle-tag">Local simulator</span>
+              </div>
+              <div className="hero-customer">
+                <span className="person-circle">J</span>
+                <div>
+                  <small>Customer</small>
+                  <p>
+                    {ticket?.ticket.messages[0].text ||
+                      "Loading the sample customer ticket…"}
+                  </p>
+                </div>
+              </div>
+              <div className="hero-agent">
+                <span className="orange-spark">
+                  <Sparkles size={18} />
+                </span>
+                <div>
+                  <small>ShopAssist AI</small>
+                  {result ? (
+                    <>
+                      <p>{result.customer_reply}</p>
+                      <div className="decision-stamp">
+                        <Check size={12} />
+                        {human(result.action)}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="awaiting">
+                        The order facts are ready.
+                        <br />
+                        Run the agent to see its decision.
+                      </p>
+                      <button
+                        className="inline-run"
+                        disabled={busy || !ticket}
+                        onClick={run}
+                      >
+                        {busy ? "Running Python…" : "Run this sample"}
+                        <Play size={12} />
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="window-bottom">
+                <span className="mono">
+                  {result
+                    ? "1 MODEL CALL · VALIDATED JSON"
+                    : "Q2 PIPELINE · READY TO EXECUTE"}
+                </span>
+                <ShieldCheck size={15} />
+              </div>
+            </div>
+            <div className="floating-policy">
+              <FileText size={18} />
+              <div>
+                <small>{result ? "CITED POLICY" : "SAMPLE POLICY"}</small>
+                <strong>Damage replacement · 7 days</strong>
+                <span>
+                  {result
+                    ? result.kb_article
+                    : "Source: repository help center"}
+                </span>
+              </div>
+              <Check size={15} />
+            </div>
+            <div className="floating-cost">
+              <div className="cost-card-top">
+                <span>Recorded benchmark · T-1004</span>
+                <span className="tiny-orange">↘</span>
+              </div>
+              {row ? (
+                <>
+                  <div className="cost-pair">
+                    <div>
+                      <small>Original Q2</small>
+                      <strong>
+                        <NumberCount value={row.baseline.points} />
+                        <em>pts</em>
+                      </strong>
+                    </div>
+                    <ArrowRight size={18} />
+                    <div>
+                      <small>Optimized Q2</small>
+                      <strong>
+                        <NumberCount value={row.optimized.points} />
+                        <em>pts</em>
+                      </strong>
+                    </div>
+                  </div>
+                  <div className="cost-bottom">
+                    <span>{num(inputSaved)} total tokens saved</span>
+                    <span>
+                      <Check size={11} />
+                      Same action + policy
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <Loading />
+              )}
+            </div>
+          </div>
+        </section>
+        {error ? <ErrorNotice message={error} retry={run} /> : null}
+        <div className="landing-disclosure">
+          <span className="mono">
+            ENGINEERING CASE STUDY / INDUS EURO LABS ASSIGNMENT
+          </span>
+          <p>
+            Provided local simulator · configured model label{" "}
+            <code>gpt-4.1-mini</code> · no hosted API calls
+          </p>
+        </div>
+        <section className="manifesto">
+          <Eyebrow>Efficiency, without the guesswork</Eyebrow>
+          <h2>
+            Better support doesn’t need
+            <br />
+            more tokens.
+            <br />
+            <span>It needs better engineering.</span>
+          </h2>
+          <div className="editorial-metrics">
+            <div>
+              <strong>
+                {base ? (
+                  <>
+                    <NumberCount value={(1 - opt / base) * 100} decimals={1} />%
+                  </>
+                ) : (
+                  "—"
+                )}
+              </strong>
+              <span>Lower Q2 billing cost</span>
+              <small>Across five measured sample tickets</small>
+            </div>
+            <div>
+              <strong>
+                {q2.length
+                  ? `${q2.filter((r) => r.optimized.correct).length}/${q2.length}`
+                  : "—"}
+              </strong>
+              <span>Decisions preserved</span>
+              <small>Action and policy reference match</small>
+            </div>
+            <div>
+              <strong>4 → 1</strong>
+              <span>Q2 model calls</span>
+              <small>Four logical stages, one billed call</small>
+            </div>
+          </div>
+        </section>
+        <section className="story-section" id="how-it-works">
+          <div className="section-intro">
+            <Eyebrow>Understand → retrieve → decide → analyze</Eyebrow>
+            <h2>
+              Follow the thinking.
+              <br />
+              <span>Then inspect the evidence.</span>
+            </h2>
+          </div>
+          <div className="story-layout" ref={storyRef}>
+            <div className="story-sticky">
+              <div className="story-mockup" key={stage}>
+                <div className="mockup-top">
+                  <span className="mini-mark">s</span>
+                  <span>Execution inspector</span>
+                  <span className="mono">0{stage + 1} / 04</span>
+                </div>
+                {stage === 0 ? (
+                  <>
+                    <div className="mockup-label">ORDER SNAPSHOT</div>
+                    <div className="receipt-icon">
+                      <Workflow size={34} />
+                    </div>
+                    <h3>{String(ticket?.order.title || "Sample order")}</h3>
+                    <dl className="mockup-facts">
+                      {[
+                        "product_type",
+                        "delivered_days_ago",
+                        "damage_reported",
+                        "customized",
+                      ].map((k) => (
+                        <div key={k}>
+                          <dt>{human(k)}</dt>
+                          <dd>{String(ticket?.order[k] ?? "…")}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <span className="mockup-foot">
+                      Read from the actual T-1004 order
+                    </span>
+                  </>
+                ) : stage === 1 ? (
+                  <>
+                    <div className="mockup-label">POLICY RETRIEVAL</div>
+                    <div className="policy-stack actual-policy-stack">
+                      {retrievedPolicies.map((id) => (
+                        <div key={id}>
+                          <FileText size={16} />
+                          <span>{id}</span>
+                          <Check size={12} />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="context-stripe">
+                      <span>
+                        Original model input ·{" "}
+                        {row
+                          ? num(
+                              row.baseline.calls.reduce(
+                                (s, c) => s + c.input_tokens,
+                                0,
+                              ),
+                            )
+                          : "…"}{" "}
+                        tokens
+                      </span>
+                      <i />
+                    </div>
+                    <div className="context-stripe selected">
+                      <span>
+                        Optimized model input ·{" "}
+                        {row
+                          ? num(
+                              row.optimized.calls.reduce(
+                                (s, c) => s + c.input_tokens,
+                                0,
+                              ),
+                            )
+                          : "…"}{" "}
+                        tokens
+                      </span>
+                      <i
+                        style={{
+                          width: row
+                            ? `${(row.optimized.calls.reduce((s, c) => s + c.input_tokens, 0) / row.baseline.calls.reduce((s, c) => s + c.input_tokens, 0)) * 100}%`
+                            : "0%",
+                        }}
+                      />
+                    </div>
+                    <span className="mockup-foot">
+                      Actual T-1004 candidate policies and input measurements
+                      from the recorded benchmark. Selected evidence can include
+                      multiple policy exceptions.
+                    </span>
+                  </>
+                ) : stage === 2 ? (
+                  <>
+                    <div className="mockup-label">STRUCTURED RESOLUTION</div>
+                    <div className="json-display">
+                      <span>{"{"}</span>
+                      <br />
+                      <span>&nbsp; &quot;action&quot;: </span>
+                      <b>
+                        {result
+                          ? `"${result.action}"`
+                          : '"Run sample to inspect"'}
+                      </b>
+                      ,<br />
+                      <span>&nbsp; &quot;kb_article&quot;:</span>
+                      <br />
+                      <b>
+                        &nbsp;{" "}
+                        {result
+                          ? `"${result.kb_article}"`
+                          : '"Awaiting execution"'}
+                      </b>
+                      <br />
+                      <span>{"}"}</span>
+                    </div>
+                    <div className="validation-line">
+                      <ShieldCheck size={16} />
+                      Schema · action · citation · policy compatibility
+                    </div>
+                    <a className="quiet-link" href="/workspace">
+                      Inspect a real execution <ArrowUpRight size={14} />
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <div className="mockup-label">
+                      MEASUREMENT, NOT ESTIMATION
+                    </div>
+                    <div className="analysis-big">
+                      {row ? row.savings_percent : "—"}
+                      <span>%</span>
+                    </div>
+                    <p>Q2 cost reduction · T-1004</p>
+                    <div className="mini-comparison">
+                      <span>Original</span>
+                      <i style={{ width: "100%" }} />
+                      <span>Optimized</span>
+                      <i
+                        className="orange-bar"
+                        style={{
+                          width: row
+                            ? `${(row.optimized.points / row.baseline.points) * 100}%`
+                            : "0%",
+                        }}
+                      />
+                    </div>
+                    <a className="quiet-link" href="/compare">
+                      Inspect the difference <ArrowUpRight size={14} />
+                    </a>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="story-steps">
+              {stages.map(([index, title, heading, body], i) => (
+                <div
+                  className={`story-step ${stage === i ? "is-active" : ""}`}
+                  data-story={i}
+                  key={title}
+                >
+                  <button
+                    onClick={() => {
+                      setStage(i);
+                      storyRef.current
+                        ?.querySelector(`[data-story="${i}"]`)
+                        ?.scrollIntoView({
+                          behavior: matchMedia(
+                            "(prefers-reduced-motion: reduce)",
+                          ).matches
+                            ? "instant"
+                            : "smooth",
+                          block: "center",
+                        });
+                    }}
+                    aria-pressed={stage === i}
+                  >
+                    <span className="step-index">{index}</span>
+                    <span>{title}</span>
+                    <ArrowUpRight size={18} />
+                  </button>
+                  <h3>{heading}</h3>
+                  <p>{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section className="signature-section">
+          <Eyebrow>Open the black box</Eyebrow>
+          <div className="signature-heading">
+            <h2>
+              Don’t take our word for it.
+              <br />
+              <span>Run the comparison.</span>
+            </h2>
+            <a className="black-button" href="/compare">
+              Inside the optimization <ArrowUpRight size={16} />
+            </a>
+          </div>
+          <div className="signature-grid">
+            <a href="/compare" className="feature-tile">
+              <div className="tile-visual bars-visual">
+                <i />
+                <i />
+                <span className="mono">ORIGINAL → OPTIMIZED</span>
+              </div>
+              <span className="tile-index">01 / LIVE COMPARISON</span>
+              <h3>Same ticket. Two strategies.</h3>
+              <p>
+                Execute the original and optimized code. Compare decisions,
+                calls, tokens, and measured billing.
+              </p>
+              <span className="quiet-link">
+                See the difference <ArrowUpRight size={16} />
+              </span>
+            </a>
+            <a href="/compare#prompt-xray" className="feature-tile">
+              <div className="tile-visual xray-visual">
+                <span>− Repeated context</span>
+                <span>− Verbose reasoning</span>
+                <span>+ Focused instructions</span>
+              </div>
+              <span className="tile-index">02 / PROMPT X-RAY</span>
+              <h3>See what stopped sending.</h3>
+              <p>
+                Inspect actual model prompts, context, and completions captured
+                by read-only instrumentation.
+              </p>
+              <span className="quiet-link">
+                Inspect the prompts <ArrowUpRight size={16} />
+              </span>
+            </a>
+            <a href="/lab" className="feature-tile">
+              <div className="tile-visual lab-visual">
+                <span>Original</span>
+                <span>Optimized Q1</span>
+                <span>Optimized Q2</span>
+              </div>
+              <span className="tile-index">03 / OPTIMIZATION LAB</span>
+              <h3>Experiment with evidence.</h3>
+              <p>
+                Compare genuine executable configurations. Every displayed
+                result comes from the Python engine.
+              </p>
+              <span className="quiet-link">
+                Enter the lab <ArrowUpRight size={16} />
+              </span>
+            </a>
+          </div>
+        </section>
+        <UnderHood />
+        <section className="faq-section">
+          <div>
+            <Eyebrow>A few useful answers</Eyebrow>
+            <h2>
+              Clarity comes
+              <br />
+              with the product.
+            </h2>
+          </div>
+          <div>
+            {[
+              [
+                "Is this using a hosted AI model?",
+                "No. This project uses the assignment’s local Python LLM simulator. gpt-4.1-mini is its configured model label, not a live hosted API.",
+              ],
+              [
+                "Are the savings real?",
+                "Yes, in assignment billing points. The original and optimized implementations execute with the unchanged tokenizer and billing formula. Results are simulator measurements, not currency.",
+              ],
+              [
+                "Does a correct demo mean perfect real-world accuracy?",
+                "No. Correctness is measured against the five supplied evaluation tickets and additional automated edge-case tests. A hosted model requires its own evaluation.",
+              ],
+              [
+                "What changed in this redesign?",
+                "The presentation and read-only execution visibility. Q1, Q2, their policies, retrieval, prompts, token counting and billing remain unchanged.",
+              ],
+            ].map(([q, a]) => (
+              <details key={q}>
+                <summary>
+                  {q}
+                  <ChevronDown size={16} />
+                </summary>
+                <p>{a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+        <section className="closing-cta">
+          <div className="cta-kicker">BUILT TO BE INSPECTED</div>
+          <h2>
+            Less inference.
+            <br />
+            <span>More confidence.</span>
+          </h2>
+          <a className="black-button" href="/workspace">
+            Put the agents to work <ArrowUpRight size={18} />
+          </a>
+          <p>Real tickets. Real Python. Every token visible.</p>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
 }

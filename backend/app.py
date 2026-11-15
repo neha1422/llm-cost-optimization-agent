@@ -127,3 +127,7 @@ def articles(q:str=Query(default='',max_length=200)):
 def article(article_id:str):
     if article_id not in article_ids(): raise HTTPException(404,'Unknown policy')
     return {'id':article_id,'content':load_article(article_id)}
+
+# Additive read-only execution traces; existing endpoints remain unchanged.
+from backend.explain import router as explain_router
+app.include_router(explain_router)

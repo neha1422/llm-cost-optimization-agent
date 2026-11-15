@@ -1,0 +1,314 @@
+{
+  "source": "Executed local pytest acceptance/API/instrumentation suite",
+  "timestamp": "2026-11-15T19:02:58.707140+05:30",
+  "cases": [
+    {
+      "name": "test_cost_and_correctness[T-1001-SupportCopilot-3000]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1001-SupportPipeline-2500]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1002-SupportCopilot-3000]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1002-SupportPipeline-2500]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1003-SupportCopilot-3000]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1003-SupportPipeline-2500]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1004-SupportCopilot-3000]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1004-SupportPipeline-2500]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1091-SupportCopilot-3000]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_cost_and_correctness[T-1091-SupportPipeline-2500]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts0-REFUND-subscription-cooling-off]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts1-SEND_ARTICLE-subscription-cooling-off]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts2-REFUND-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts3-ESCALATE_TIER2-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts4-REPLACE-damage-replacement-7-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts5-ESCALATE_TIER2-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts6-ESCALATE_TIER2-custom-items-no-replace]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts7-SEND_ARTICLE-digital-license-no-refund]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question1.agent-SupportCopilot-facts8-ESCALATE_TIER2-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts0-REFUND-subscription-cooling-off]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts1-SEND_ARTICLE-subscription-cooling-off]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts2-REFUND-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts3-ESCALATE_TIER2-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts4-REPLACE-damage-replacement-7-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts5-ESCALATE_TIER2-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts6-ESCALATE_TIER2-custom-items-no-replace]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts7-SEND_ARTICLE-digital-license-no-refund]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_unseen_orders[question2.agent-SupportPipeline-facts8-ESCALATE_TIER2-returns-within-30-days]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_invalid_completions[no json]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_invalid_completions[{}]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_invalid_completions[{\"action\":1,\"kb_article\":\"x\"}]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_invalid_completions[{\"action\":\"REFUND\",\"kb_article\":\"missing\"}]",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_pipeline_audit_rejects_conflict",
+      "suite": "tests.test_optimization",
+      "passed": true
+    },
+    {
+      "name": "test_health_and_catalog",
+      "suite": "tests.test_api",
+      "passed": true
+    },
+    {
+      "name": "test_ticket_and_policy",
+      "suite": "tests.test_api",
+      "passed": true
+    },
+    {
+      "name": "test_execution_and_validation",
+      "suite": "tests.test_api",
+      "passed": true
+    },
+    {
+      "name": "test_benchmarks_are_executed",
+      "suite": "tests.test_api",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1001-q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1001-q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1001-baseline_q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1001-baseline_q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1002-q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1002-q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1002-baseline_q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1002-baseline_q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1003-q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1003-q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1003-baseline_q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1003-baseline_q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1004-q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1004-q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1004-baseline_q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1004-baseline_q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1091-q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1091-q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1091-baseline_q1]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_real_configurations_match_reference[T-1091-baseline_q2]",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_q2_trace_contains_real_input_output",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_baseline_resource_integrity",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_experiment_api_validates_and_executes",
+      "suite": "tests.test_explain",
+      "passed": true
+    },
+    {
+      "name": "test_transparency_is_honest",
+      "suite": "tests.test_explain",
+      "passed": true
+    }
+  ],
+  "passed": 61,
+  "full_suite_passed": 65,
+  "full_suite_failed": 2
+}

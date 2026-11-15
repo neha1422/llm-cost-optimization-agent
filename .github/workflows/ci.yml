@@ -16,7 +16,7 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: pip install -r requirements.txt
-      - run: pytest tests/test_optimization.py tests/test_api.py -q
+      - run: pytest tests/test_optimization.py tests/test_api.py tests/test_explain.py -q
       - name: Original correctness tests
         run: pytest tests/test_question1.py tests/test_question2.py -k 'not baseline_cost_is_high and not help_center_exceeds_context' -q
       - run: npm --prefix web ci

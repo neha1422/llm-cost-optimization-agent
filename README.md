@@ -10,6 +10,17 @@ A working Python optimization solution for both IndusEuro Labs assignment tracks
 **API health:** https://shopassist-cost-lab.vercel.app/api/health  
 **API docs:** https://shopassist-cost-lab.vercel.app/api/docs
 
+## Product experience
+
+The product now includes a warm editorial landing page, an engineering workspace, real live before/after execution, Prompt X-Ray and an executable optimization lab.
+
+- [Live product](https://shopassist-cost-lab.vercel.app/)
+- [Engineering workspace](https://shopassist-cost-lab.vercel.app/workspace)
+- [Inside the optimization](https://shopassist-cost-lab.vercel.app/compare)
+- [Optimization lab](https://shopassist-cost-lab.vercel.app/lab)
+
+The redesigned interface preserves the existing agents and billing exactly. Read the [redesign implementation and verification notes](docs/REDESIGN.md). The new read-only API endpoints are `POST /api/explain/experiments` and `GET /api/explain/transparency`.
+
 ## Attribution
 
 Based on [IndusEuro Labs’ original assignment](https://github.com/Induseuro-labs/intern-assignment-llm-cost-optimization). The original repository is a read-only source. This is an independent submission repository owned by `neha1422`. The source README is preserved in [docs/ORIGINAL_ASSIGNMENT.md](docs/ORIGINAL_ASSIGNMENT.md). Upstream has no license file; this project does not assert a new license over their material.
@@ -106,7 +117,7 @@ For separate development servers and production hosting, see [docs/DEPLOYMENT.md
 
 ```bash
 # Acceptance, unseen boundaries, parser validation and API integration
-pytest tests/test_optimization.py tests/test_api.py -q
+pytest tests/test_optimization.py tests/test_api.py tests/test_explain.py -q
 # Regenerate original + optimized measurements (slow unchanged baseline KB builder)
 python -m benchmarks.run
 # Original assignment launchers
@@ -119,7 +130,7 @@ npm --prefix web run build
 npm --prefix web run typecheck
 ```
 
-Executed verification: **37 acceptance/API tests passed**, production build and TypeScript checks passed. The full suite after optimization reports **41 passed, 2 failed** (only the obsolete high-cost assertions below). The original six tests passed before optimization. After optimization, the two original tests named `test_baseline_cost_is_high` intentionally fail because those tests assert that the old wasteful cost remains high. They are preserved unchanged. Run the acceptance suite for actual correctness and cost ceilings; do not inflate costs to satisfy baseline assertions.
+Executed verification: **61 acceptance/API/instrumentation tests passed**, production build and TypeScript checks passed. The full suite after optimization reports **65 passed, 2 failed** (only the obsolete high-cost assertions below). The original six tests passed before optimization. After optimization, the two original tests named `test_baseline_cost_is_high` intentionally fail because those tests assert that the old wasteful cost remains high. They are preserved unchanged. Run the acceptance suite for actual correctness and cost ceilings; do not inflate costs to satisfy baseline assertions.
 
 The additional tests cover all supplied tickets, unseen physical/digital/custom/subscription order combinations, 7/8-day damage and 30/31-day refund boundaries, malformed completions, citation/schema validation, API error handling and live benchmark reruns. These establish simulator behavior, not general hosted-model accuracy.
 
@@ -150,6 +161,14 @@ Executed browser/API checks and test details: [docs/VERIFICATION.md](docs/VERIFI
 - The public demo records no durable user history. Metric cards summarize the measured suite, not lifetime traffic.
 - Stage timings are wall-clock observations, not guaranteed production latency. Baseline KB creation is slow and intentionally unchanged.
 
-## Screenshot
+## Screenshots
+
+![Current product landing page](docs/screenshots/redesign-home-desktop.jpg)
+
+![Live before/after comparison](docs/screenshots/redesign-comparison.jpg)
+
+[Mobile screenshot](docs/screenshots/redesign-home-mobile.jpg) · [Implementation and verification notes](docs/REDESIGN.md)
+
+### Original dashboard (before redesign)
 
 ![Responsive mobile overview](docs/screenshots/mobile.jpg)

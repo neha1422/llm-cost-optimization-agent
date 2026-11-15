@@ -1,0 +1,146 @@
+{
+  "url": "https://shopassist-cost-lab.vercel.app",
+  "verified_at_unix": 1794749729.550039,
+  "checks": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/workspace",
+      "status": 200
+    },
+    {
+      "path": "/compare",
+      "status": 200
+    },
+    {
+      "path": "/lab",
+      "status": 200
+    },
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/docs",
+      "status": 200
+    },
+    {
+      "path": "/api/explain/transparency",
+      "status": 200
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1001",
+      "points": 1662,
+      "unchanged": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1002",
+      "points": 1452,
+      "unchanged": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1003",
+      "points": 1500,
+      "unchanged": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1004",
+      "points": 1461,
+      "unchanged": true
+    },
+    {
+      "mode": "q1",
+      "ticket_id": "T-1091",
+      "points": 1329,
+      "unchanged": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1001",
+      "points": 1665,
+      "unchanged": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1002",
+      "points": 1455,
+      "unchanged": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1003",
+      "points": 1503,
+      "unchanged": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1004",
+      "points": 1464,
+      "unchanged": true
+    },
+    {
+      "mode": "q2",
+      "ticket_id": "T-1091",
+      "points": 1332,
+      "unchanged": true
+    },
+    {
+      "ticket_id": "T-1001",
+      "configurations": 4,
+      "correct": true,
+      "trace_costs_match": true
+    },
+    {
+      "ticket_id": "T-1002",
+      "configurations": 4,
+      "correct": true,
+      "trace_costs_match": true
+    },
+    {
+      "ticket_id": "T-1003",
+      "configurations": 4,
+      "correct": true,
+      "trace_costs_match": true
+    },
+    {
+      "ticket_id": "T-1004",
+      "configurations": 4,
+      "correct": true,
+      "trace_costs_match": true
+    },
+    {
+      "ticket_id": "T-1091",
+      "configurations": 4,
+      "correct": true,
+      "trace_costs_match": true
+    },
+    {
+      "path": "/api/benchmarks/run",
+      "status": 200,
+      "cases": 10
+    }
+  ],
+  "final_deployment_id": "dpl_7AWdpt9Xhm5Q2uPgwSC4H6UiU6yJ",
+  "final_verified_at": "2026-11-15T13:47:22.543419+00:00",
+  "browser_checks": [
+    "Live hero replacement response",
+    "Original vs optimized comparison",
+    "Prompt X-Ray actual prompt/token counts",
+    "Q1 1662-point refund",
+    "Q2 1665-point refund",
+    "Pipeline audit actual input/output and zero model calls",
+    "Log scale and optimized detail",
+    "Knowledge base search",
+    "Benchmark execution",
+    "Recorded 61-case test matrix",
+    "Supporting-policy navigation and retrieved markers",
+    "390px mobile viewport equals document width",
+    "No captured console errors or warnings"
+  ]
+}

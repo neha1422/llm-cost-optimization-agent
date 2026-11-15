@@ -32,6 +32,10 @@
       "dest": "/api/index.py"
     },
     {
+      "src": "/(workspace|compare|lab)/?",
+      "dest": "/$1.html"
+    },
+    {
       "handle": "filesystem"
     },
     {

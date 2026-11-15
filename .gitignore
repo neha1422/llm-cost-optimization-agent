@@ -12,3 +12,5 @@ out/
 !.env.example
 *.tsbuildinfo
 .DS_Store
+work/
+web/lib/verification.json
