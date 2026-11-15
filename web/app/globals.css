@@ -5146,7 +5146,7 @@ html[data-theme="dark"] .guided-demo {
   margin-bottom: 9px;
   color: var(--g-muted);
 }
-.guide-case > select,
+.guide-case-controls > select,
 .guide-version select {
   display: block;
   width: 100%;
@@ -6163,7 +6163,7 @@ html[data-theme="dark"] .engineering-menu > div > a:hover {
   .guide-select-label {
     font-size: 11px;
   }
-  .guide-case > select {
+  .guide-case-controls > select {
     font-size: 13px !important;
     padding: 13px 10px !important;
   }
@@ -6525,4 +6525,34 @@ html[data-theme="dark"] .engineering-menu > div > a:hover {
 .guide-stepper .complete > span {
   background: var(--g-goodbg);
   border-color: var(--g-border);
+}
+
+.guide-case-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.guide-case-controls > select {
+  flex: 1;
+  min-width: 0;
+  width: auto !important;
+}
+.guide-case-controls > .guide-primary {
+  flex: none;
+}
+.guide-run-row p {
+  max-width: none;
+}
+@media (max-width: 650px) {
+  .guide-case-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .guide-case-controls > select {
+    width: 100% !important;
+  }
+  .guide-case-controls > .guide-primary {
+    width: 100%;
+  }
 }

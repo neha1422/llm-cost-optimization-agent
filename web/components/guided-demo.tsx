@@ -346,24 +346,32 @@ export default function GuidedDemo({
                 >
                   Sample customer request
                 </label>
-                <select
-                  id="customer-problem"
-                  value={selected}
-                  disabled={active}
-                  onChange={(e) => {
-                    if (e.target.value === selected) return;
-                    setSelected(e.target.value);
-                    setTicket(null);
-                    setResult(null);
-                    setComparison(null);
-                  }}
-                >
-                  {samples.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name} — {s.hint}
-                    </option>
-                  ))}
-                </select>
+                <div className="guide-case-controls">
+                  <select
+                    id="customer-problem"
+                    value={selected}
+                    disabled={active}
+                    onChange={(e) => {
+                      if (e.target.value === selected) return;
+                      setSelected(e.target.value);
+                      setTicket(null);
+                      setResult(null);
+                      setComparison(null);
+                    }}
+                  >
+                    {samples.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} — {s.hint}
+                      </option>
+                    ))}
+                  </select>
+                  <RunButton
+                    busy={active}
+                    disabled={active || !ticket}
+                    onClick={() => run(tab === "compare")}
+                    comparison={tab === "compare"}
+                  />
+                </div>
                 {ticket ? (
                   <div className="guide-case-body">
                     <div className="guide-customer-message">
@@ -419,8 +427,8 @@ export default function GuidedDemo({
                   <div>
                     <h3>
                       {tab === "compare"
-                        ? "Compare two ways of solving the same request"
-                        : "Ready to help this customer?"}
+                        ? "What this comparison does"
+                        : "What happens when you run it"}
                     </h3>
                     <p>
                       {tab === "compare"
@@ -428,12 +436,6 @@ export default function GuidedDemo({
                         : "The assistant will check the order, consult the support policies, and suggest a reply."}
                     </p>
                   </div>
-                  <RunButton
-                    busy={active}
-                    disabled={active || !ticket}
-                    onClick={() => run(tab === "compare")}
-                    comparison={tab === "compare"}
-                  />
                 </div>
                 <details className="guide-version">
                   <summary>
